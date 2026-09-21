@@ -1,20 +1,22 @@
 #include "Parser.hpp"
 
-Command Parser::parse(const std::string& line)
+void Parser::parsePrefix(std::string& buffer, Command& cmd)
 {
-	Command cmd;
-
-	std::string buffer = line;
-
+	if (buffer.empty() && buffer[0] != ':')
+		return;
 	size_t space_pos = buffer.find(' ');
 
-	if (!buffer.empty() && buffer[0] == ':')
-	{
-		cmd.prefix = buffer.substr(1, space_pos - 1);
-		buffer.erase(0, space_pos + 1);
-	}
+	if(space_pos == std::string::npos)
+		return;
 
-	space_pos = buffer.find(' ');
+	cmd.prefix = buffer.substr(1, space_pos - 1);
+	buffer.erase(0, space_pos + 1);
+}
+
+void Parser::parseCommand(std::string& buffer, Command& cmd)
+{
+	size_t space_pos = buffer.find(' ');
+
 	if (space_pos == std::string::npos)
 	{
 		cmd.name = buffer;
@@ -25,7 +27,10 @@ Command Parser::parse(const std::string& line)
 		cmd.name = buffer.substr(0, space_pos);
 		buffer.erase(0, space_pos + 1);
 	}
+}
 
+void Parser::parseParams(std::string& buffer, Command& cmd)
+{
 	size_t pos;
 	while (!buffer.empty())
 	{
@@ -47,6 +52,17 @@ Command Parser::parse(const std::string& line)
 		cmd.params.push_back(param);
 		buffer.erase(0, pos + 1);
 	}
+}
+
+Command Parser::parse(const std::string& line)
+{
+	Command cmd;
+
+	std::string buffer = line;
+
+	parsePrefix(buffer, cmd);
+	parseCommand(buffer, cmd);
+	parseParams(buffer, cmd);
 
 	return cmd;
 }
