@@ -7,6 +7,14 @@ Command Parser::parse(const std::string& line)
 	std::string buffer = line;
 
 	size_t space_pos = buffer.find(' ');
+
+	if (!buffer.empty() && buffer[0] == ':')
+	{
+		cmd.prefix = buffer.substr(1, space_pos - 1);
+		buffer.erase(0, space_pos + 1);
+	}
+
+	space_pos = buffer.find(' ');
 	if (space_pos == std::string::npos)
 	{
 		cmd.name = buffer;
