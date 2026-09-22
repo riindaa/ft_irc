@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include <poll.h>
+#include "Dispatcher.hpp"
 
 class Client;
 class Channel;
@@ -16,9 +17,10 @@ private:
     std::string                 _password;
     int                         _serverSocket;
     std::vector<struct pollfd>  _pollFds;
-    
+
     std::map<int, Client*>      _clients;
     std::map<std::string, Channel*> _channels;
+    Dispatcher _dispatcher;
 
 public:
     Server(int port, const std::string& password);
