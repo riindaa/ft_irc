@@ -7,15 +7,15 @@
 
 Dispatcher::Dispatcher()
 {
-	_handlers["PASS"] = &Server::handleNick;
-	_handlers["NICK"] = &Server::handleNick;
-	_handlers["USER"] = &Server::handleNick;
-	_handlers["JOIN"] = &Server::handleNick;
-	_handlers["PRIVMSG"] = &Server::handleNick;
-	_handlers["KICK"] = &Server::handleNick;
-	_handlers["INVITE"] = &Server::handleNick;
-	_handlers["TOPIC"] = &Server::handleNick;
-	_handlers["MODE"] = &Server::handleNick;
+	// _handlers["PASS"] = &Server::handleNick;
+	// _handlers["NICK"] = &Server::handleNick;
+	// _handlers["USER"] = &Server::handleNick;
+	// _handlers["JOIN"] = &Server::handleNick;
+	// _handlers["PRIVMSG"] = &Server::handleNick;
+	// _handlers["KICK"] = &Server::handleNick;
+	// _handlers["INVITE"] = &Server::handleNick;
+	// _handlers["TOPIC"] = &Server::handleNick;
+	// _handlers["MODE"] = &Server::handleNick;
 }
 
 Dispatcher::~Dispatcher(){}
@@ -28,7 +28,7 @@ void Dispatcher::dispatch(Server& server, Client* client, const Command& cmd)
 	it = _handlers.find(cmd.name);
 	if (it == _handlers.end())
 	{
-		// TODO: ERR_UNKNOWNCOMMAND (421)
+		// we need ERR_UNKNOWNCOMMAND (421)
 		std::cout << "Unknown command: " << cmd.name << std::endl;
 		return;
 	}
