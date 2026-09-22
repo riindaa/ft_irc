@@ -1,5 +1,10 @@
 #include "Parser.hpp"
 
+char const *Parser::InvalidMessageException ::what() const throw()
+{
+	return "Invalid IRC  message";
+}
+
 void Parser::skipSpaces(std::string& buffer)
 {
 	while(!buffer.empty() &&  buffer[0] == ' ')
@@ -14,7 +19,7 @@ void Parser::parsePrefix(std::string& buffer, Command& cmd)
 	size_t space_pos = buffer.find(' ');
 
 	if(space_pos == std::string::npos)
-		return;
+		throw InvalidMessageException();
 
 	cmd.prefix = buffer.substr(1, space_pos - 1);
 	buffer.erase(0, space_pos + 1);
@@ -70,10 +75,12 @@ Command Parser::parse(const std::string& line)
 	Command cmd;
 
 	std::string buffer = line;
-
+	if (buffer.size() >= 2 && buffer[buffer.size() - 2] == '\r' && buffer[buffer.size() - 1] == '\n')
+		buffer.erase(buffer.size() - 2, 2);
 	parsePrefix(buffer, cmd);
 	parseCommand(buffer, cmd);
 	parseParams(buffer, cmd);
 
 	return cmd;
 }
+

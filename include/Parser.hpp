@@ -3,6 +3,7 @@
 
 #include "Command.hpp"
 #include <string>
+#include <exception>
 
 class Parser
 {
@@ -14,6 +15,12 @@ class Parser
 
 	public:
 		static Command parse(const std::string& line);
+
+		class InvalidMessageException  : public std::exception
+		{
+			public:
+				virtual char const *what() const throw();
+		};
 };
 
 #endif
