@@ -18,7 +18,7 @@ void Parser::parsePrefix(std::string& buffer, Command& cmd)
 		return;
 	size_t space_pos = buffer.find(' ');
 
-	if(space_pos == std::string::npos)
+	if(space_pos == std::string::npos || space_pos == 1)
 		throw InvalidMessageException();
 
 	cmd.prefix = buffer.substr(1, space_pos - 1);
@@ -28,6 +28,8 @@ void Parser::parsePrefix(std::string& buffer, Command& cmd)
 void Parser::parseCommand(std::string& buffer, Command& cmd)
 {
 	skipSpaces(buffer);
+	if (buffer.empty())
+		throw InvalidMessageException();
 	size_t space_pos = buffer.find(' ');
 
 	if (space_pos == std::string::npos)
