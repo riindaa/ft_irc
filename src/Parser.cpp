@@ -1,8 +1,15 @@
 #include "Parser.hpp"
 
+void Parser::skipSpaces(std::string& buffer)
+{
+	while(!buffer.empty() &&  buffer[0] == ' ')
+		buffer.erase(0, 1);
+}
+
 void Parser::parsePrefix(std::string& buffer, Command& cmd)
 {
-	if (buffer.empty() && buffer[0] != ':')
+	skipSpaces(buffer);
+	if (buffer.empty() || buffer[0] != ':')
 		return;
 	size_t space_pos = buffer.find(' ');
 
@@ -15,6 +22,7 @@ void Parser::parsePrefix(std::string& buffer, Command& cmd)
 
 void Parser::parseCommand(std::string& buffer, Command& cmd)
 {
+	skipSpaces(buffer);
 	size_t space_pos = buffer.find(' ');
 
 	if (space_pos == std::string::npos)
@@ -34,6 +42,9 @@ void Parser::parseParams(std::string& buffer, Command& cmd)
 	size_t pos;
 	while (!buffer.empty())
 	{
+		skipSpaces(buffer);
+		if (buffer.empty())
+			break;
 		if (buffer[0] == ':')
 		{
 			std::string trailing = buffer.substr(1);

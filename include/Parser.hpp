@@ -2,7 +2,7 @@
 #define PARSER_HPP
 
 #include "Command.hpp"
-#include <cstring>
+#include <string>
 
 class Parser
 {
@@ -10,6 +10,7 @@ class Parser
 		static void parsePrefix(std::string& buffer, Command& cmd);
 		static void parseCommand(std::string& buffer, Command& cmd);
 		static void parseParams(std::string& buffer, Command& cmd);
+		static void skipSpaces(std::string& buffer);
 
 	public:
 		static Command parse(const std::string& line);
