@@ -79,6 +79,9 @@ Command Parser::parse(const std::string& line)
 	std::string buffer = line;
 	if (buffer.size() >= 2 && buffer[buffer.size() - 2] == '\r' && buffer[buffer.size() - 1] == '\n')
 		buffer.erase(buffer.size() - 2, 2);
+
+	if (buffer.size() > MAX_MESSAGE_LENGTH) // can be deleted
+		throw InvalidMessageException();
 	parsePrefix(buffer, cmd);
 	parseCommand(buffer, cmd);
 	parseParams(buffer, cmd);
