@@ -30,6 +30,7 @@ class Channel
     size_t getUserLimit() const;
     bool isInviteOnly() const;
     bool isTopicRestricted() const;
+    bool isEmpty() const;
 
     const std::map<Client *, bool> &getClients() const;
     const std::set<Client *> &getInvitedClients() const;
@@ -37,7 +38,7 @@ class Channel
     bool isMember(Client *client) const;
     bool isOperator(Client *client) const;
     bool isInvited(Client *client) const;
-
+   
     void setTopic(const std::string &topic);
     void setKey(const std::string &key);
     void setUserLimit(size_t limit);
