@@ -24,16 +24,17 @@ private:
     int _fd;
     int _port;
     std::string _host;
-    std::vector<struct pollfd> _pollfds;
+    std::vector<pollfd> _pollfds;
     
     ServerState _state;
 
-    bool set_non_blocking();
+    bool set_non_blocking(int fd);
     bool set_sockopt();
     bool set_bind();
+    void create_pfd(int fd);
 
     void acceptNewConnection();
-    void handleClientData(int fd);
+    void handleClientData(int client_fd);
 
 public:
     Server(int port, const std::string &host, const std::string &password);

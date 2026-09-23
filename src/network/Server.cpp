@@ -11,16 +11,16 @@ Server::~Server()
 {
 }
 
-bool Server::set_non_blocking()
+bool Server::set_non_blocking(int fd)
 {
-    int flags = fcntl(_fd, F_GETFL, 0);
+    int flags = fcntl(fd, F_GETFL, 0);
     if (flags < 0)
     {
         std::cerr << "Error fcntl F_GETFL: " << std::strerror(errno) << "\n";
         closeSocket();
         return false;
     }
-    if (fcntl(_fd, F_SETFL, flags | O_NONBLOCK) < 0)
+    if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) < 0)
     {
         std::cerr << "Error fcntl F_SETFL: " << std::strerror(errno) << "\n";
         closeSocket();
@@ -94,7 +94,7 @@ bool Server::setup()
     if (!set_sockopt())
         return false;
 
-    if (!set_non_blocking())
+    if (!set_non_blocking(_fd))
         return false;
 
     if (!set_bind())
@@ -109,20 +109,58 @@ bool Server::setup()
     return true;
 }
 
+void Server::create_pfd(int fd)
+{
+    pollfd pfd;
+    std::memset(&pfd, 0, sizeof(pfd));
+    pfd.fd = _fd;
+    pfd.events = POLLIN;
+    pfd.revents = 0;
+    _pollfds.push_back(pfd);
+}
+
+void Server::acceptNewConnection()
+{
+    struct sockaddr_in client_addr;
+    socklen_t addr_len = sizeof(client_addr);
+
+    int client_fd = accept(_fd, (struct sockaddr *)&client_addr, &addr_len);
+    if (client_fd < 0)
+        std::cerr << "Error accept " << std::strerror(errno) << "\n";
+    if (!set_non_blocking(client_fd))
+        close(client_fd);
+    create_pfd(client_fd);
+}
+
+void handleClientData(int client_fd)
+{
+    
+}
+
 void Server::run()
 {
     if (_fd == -1)
         return;
-    pollfd server_pfd;
-
-    server_pfd.fd = _fd;
-    server_pfd.events = POLLIN;
-    server_pfd.revents = 0;
-    _pollfds.push_back(server_pfd);
-
+    create_pfd(_fd);
     while (server_running)
     {
-        
+        int poll_count = poll(&_pollfds[0], _pollfds.size(), -1);
+        if (poll_count < 0)
+        {
+            if (errno == EINTR)
+                continue;
+            std::cerr << "Error poll: " << std::strerror(errno) << "\n";
+            break;
+        }
+        for (size_t i = 0; i < _pollfds.size(); ++i)
+        {
+            if (_pollfds[i].revents & POLLIN)
+            {
+                if (_pollfds[i].fd == _fd)
+                    acceptNewConnection();
+                else
+                    handleClientData(_pollfds[i].fd);
+            }
     }
 }
 
