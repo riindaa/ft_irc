@@ -77,5 +77,5 @@ void ServerState::removeChannelIfEmpty(const std::string& name)
 
 bool ServerState::checkPassword(const std::string& input) const
 {
-    
+    return input == _password;
 }

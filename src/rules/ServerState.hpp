@@ -6,8 +6,6 @@
 #include <string>
 #include <map>
 
-class Server;
-
 class ServerState {
 private:
     std::string _password;
