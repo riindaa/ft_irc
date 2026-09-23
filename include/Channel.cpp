@@ -51,6 +51,11 @@ bool Channel::isTopicRestricted() const
     return _topicRestricted;
 }
 
+bool Channel::isEmpty() const
+{
+   return _clients.empty();
+}
+
 const std::map<Client*, bool>& Channel::getClients() const
 {
     return _clients;

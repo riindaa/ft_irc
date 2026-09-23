@@ -1,12 +1,10 @@
 #ifndef SERVERSTATE_HPP
 #define SERVERSTATE_HPP
 
+#include "Client.hpp"
+#include "Channel.hpp"
 #include <string>
 #include <map>
-
-class Server;
-class Client;
-class Channel;
 
 class ServerState {
 private:
