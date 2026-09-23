@@ -10,16 +10,9 @@ Channel::~Channel()
 {
 }
 
-Channel::Channel(const std::string& name, const std::string& key)
-    : _name(name), _topic(""), _key(key), _userLimit(0), _inviteOnly(false), _topicRestricted(false)
-{
-}
-
 Channel::~Channel()
 {
 }
-
-// ================= Getters =================
 
 const std::string& Channel::getName() const
 {
@@ -143,7 +136,6 @@ void Channel::removeInvite(Client* client)
         _invitedClients.erase(client);
 }
 
-// ================= Communication =================
 
 void Channel::broadcast(const std::string& message, Client* sender)
 {

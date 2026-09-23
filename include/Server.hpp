@@ -17,8 +17,7 @@
 #include <poll.h>
 #include <csignal>
 
-#include "Channel.hpp"
-#include "Client.hpp"
+#include "ServerState.hpp"
 
 class Server {
 private:
@@ -43,6 +42,10 @@ public:
     bool setup();
     void run();
     void closeSocket();
+
+    const std::string &getHost() const;
+    int getPort() const;
+    int getFd() const;
 };
 
 void handle_signal(int sig);

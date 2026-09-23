@@ -3,7 +3,7 @@
 volatile __sig_atomic_t server_running = true;
 
 Server::Server(int port, const std::string &host, const std::string &password)
-    : _host(host), _port(port), _fd(-1), _password(password)
+    : _host(host), _port(port), _fd(-1), _state(password)
 {
 }
 
@@ -60,16 +60,6 @@ bool Server::set_bind()
     return true;
 }
 
-const std::map<int, Client *> &Server::getClients() const
-{
-    return _clients;
-}
-
-const std::map<std::string, Channel *> &Server::getChannels() const
-{
-    return _channels;
-}
-
 int Server::getFd() const
 {
     return _fd;
@@ -117,16 +107,6 @@ bool Server::setup()
         return false;
     }
     return true;
-}
-
-void Server::setClient(Client *newClient)
-{
-    _clients.insert(std::make_pair(newClient->getFd(), newClient));
-}
-
-void Server::setChannel(Channel *newChannel)
-{
-    _channels.insert(std::make_pair(newChannel->getName(), newChannel));
 }
 
 void Server::run()
