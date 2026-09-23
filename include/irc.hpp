@@ -5,5 +5,6 @@
 #include "Client.hpp"
 #include "Server.hpp"
 #include "Command.hpp"
+#include "../src/rules/ServerState.hpp"
 
 #endif
