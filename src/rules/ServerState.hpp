@@ -24,6 +24,7 @@ public:
     void removeClient(int fd); 
     Channel* createChannel(const std::string& name);
     void removeChannelIfEmpty(const std::string& name);
+    void removeClientFromAllChannels(Client* client);
 
     bool checkPassword(const std::string& input) const;
 };

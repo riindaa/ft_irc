@@ -132,9 +132,51 @@ void Server::acceptNewConnection()
     create_pfd(client_fd);
 }
 
-void handleClientData(int client_fd)
+void Server::disconnectClient(int fd)
 {
-    
+    close(fd);
+    for (std::vector<struct pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it)
+    {
+        if (it->fd == fd)
+        {
+            _pollfds.erase(it);
+            break;
+        }
+    }
+    Client* client = _state.getClientByFd(fd);
+    if (client)
+    {
+        _state.removeClientFromAllChannels(client);
+        _state.removeClient(fd);
+    }
+}
+
+void Server::handleClientData(int client_fd)
+{
+    char buffer[513];
+    ssize_t bytes_read = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
+
+    if (bytes_read <= 0)
+    {
+        disconnectClient(client_fd);
+        return;
+    }
+    buffer[bytes_read] = '\0';
+
+    Client* client = _state.getClientByFd(client_fd);
+    if (!client)
+        return;
+
+    client->appendInBuff(buffer);
+
+    std::string command_line;
+    while (client->extractNextCommand(command_line))
+    {
+        //parser
+        //executer
+    }
+    if (client->getInBuff().size() > 512)
+        client->clearInBuff();
 }
 
 void Server::run()
@@ -161,6 +203,7 @@ void Server::run()
                 else
                     handleClientData(_pollfds[i].fd);
             }
+        }
     }
 }
 

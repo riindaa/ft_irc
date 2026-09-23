@@ -47,6 +47,8 @@ public:
     const std::string &getHost() const;
     int getPort() const;
     int getFd() const;
+
+    void disconnectClient(int fd);
 };
 
 void handle_signal(int sig);

@@ -116,3 +116,22 @@ void Client::closeClient()
         _fd = -1;
     }
 }
+
+bool Client::extractNextCommand(std::string &command_line)
+{
+    size_t pos = _inBuff.find("\r\n");
+    size_t delimiter_len = 2;
+
+    if (pos == std::string::npos)
+    {
+        pos = _inBuff.find("\n");
+        delimiter_len = 1;
+    }
+
+    if (pos == std::string::npos)
+        return false;
+
+    command_line = _inBuff.substr(0, pos);
+    _inBuff.erase(0, pos + delimiter_len);
+    return true;
+}

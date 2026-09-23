@@ -53,6 +53,8 @@ class Client
     void appendOutBuff(const std::string &str);
     void clearInBuff();
 
+    bool extractNextCommand(std::string &command_line);
+
     void closeClient();
 };
 
