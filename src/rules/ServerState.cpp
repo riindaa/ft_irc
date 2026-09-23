@@ -75,6 +75,11 @@ void ServerState::removeChannelIfEmpty(const std::string& name)
     }
 }
 
+void ServerState::removeClientFromAllChannels(Client* client)
+{
+    
+}
+
 bool ServerState::checkPassword(const std::string& input) const
 {
     return input == _password;
