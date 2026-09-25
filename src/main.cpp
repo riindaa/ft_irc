@@ -14,8 +14,12 @@ int main(int ac, char**av)
     Server server(8080, "localhost", "password");
 
     if (!server.setup())
+    {
+        server.~Server();
         return 1;
+    }
     server.run();
 
+    server.~Server();
     return 0;
 }

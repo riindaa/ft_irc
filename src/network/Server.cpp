@@ -9,21 +9,14 @@ Server::Server(int port, const std::string &host, const std::string &password)
 
 Server::~Server()
 {
+    closeSocket();
 }
 
 bool Server::set_non_blocking(int fd)
 {
-    int flags = fcntl(fd, F_GETFL, 0);
-    if (flags < 0)
-    {
-        std::cerr << "Error fcntl F_GETFL: " << std::strerror(errno) << "\n";
-        closeSocket();
-        return false;
-    }
-    if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) < 0)
+    if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0)
     {
         std::cerr << "Error fcntl F_SETFL: " << std::strerror(errno) << "\n";
-        closeSocket();
         return false;
     }
     return true;
@@ -35,7 +28,6 @@ bool Server::set_sockopt()
     if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
     {
         std::cerr << "Error setsockopt: " << std::strerror(errno) << "\n";
-        closeSocket();
         return false;
     }
     return (true);
@@ -54,7 +46,6 @@ bool Server::set_bind()
     if (bind(_fd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) < 0)
     {
         std::cerr << "Error bind\n";
-        closeSocket();
         return false;
     }
     return true;
@@ -92,18 +83,26 @@ bool Server::setup()
     }
 
     if (!set_sockopt())
+    {
+        closeSocket();
         return false;
+    }
 
     if (!set_non_blocking(_fd))
+    {
+        closeSocket();
         return false;
+    }
 
     if (!set_bind())
+    {
+        closeSocket();
         return false;
+    }
 
     if (listen(_fd, SOMAXCONN) < 0)
     {
         std::cerr << "Error listen: " << std::strerror(errno) << "\n";
-        closeSocket();
         return false;
     }
     return true;
@@ -113,7 +112,7 @@ void Server::create_pfd(int fd)
 {
     pollfd pfd;
     std::memset(&pfd, 0, sizeof(pfd));
-    pfd.fd = _fd;
+    pfd.fd = fd;
     pfd.events = POLLIN;
     pfd.revents = 0;
     _pollfds.push_back(pfd);
@@ -126,9 +125,15 @@ void Server::acceptNewConnection()
 
     int client_fd = accept(_fd, (struct sockaddr *)&client_addr, &addr_len);
     if (client_fd < 0)
+    {
         std::cerr << "Error accept " << std::strerror(errno) << "\n";
+        return;
+    }
     if (!set_non_blocking(client_fd))
+    {
         close(client_fd);
+        return;
+    }
     create_pfd(client_fd);
 }
 
