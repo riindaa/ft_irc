@@ -1,7 +1,18 @@
 #include <iostream>
 #include <stdexcept>
+#include <cctype>
+
 #include "Reply.hpp"
 #include "ServerState.hpp"
+
+static std::string toLower(const std::string& str)
+{
+    std::string result(str);
+
+    for (size_t i = 0; i < result.size(); ++i)
+        result[i] = std::tolower(static_cast<unsigned char>(result[i]));
+    return result;
+}
 
 ServerState::ServerState(const std::string& password) : _password(password)
 {
@@ -21,14 +32,15 @@ Client* ServerState::getClientByFd(int fd)
 }
 Client* ServerState::getClientByNick(const std::string& nick)
 {
+    const std::string nickToLower = toLower(nick);
+
     for (std::map<int, Client*>::iterator it = _clients.begin();
          it != _clients.end(); ++it)
     {
-        if (it->second->getNickname() == nick)
+        if (toLower(it->second->getNickname()) == nickToLower)
             return it->second;
     }
     return NULL;
-
 }
 Channel* ServerState::getChannel(const std::string& name)
 {
