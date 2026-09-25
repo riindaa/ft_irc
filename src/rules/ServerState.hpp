@@ -27,6 +27,7 @@ public:
     void removeClientFromAllChannels(Client* client);
 
     bool checkPassword(const std::string& input) const;
+    void tryRegister(Client* client);
 };
 
 #endif

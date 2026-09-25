@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdexcept>
+#include "Reply.hpp"
 #include "ServerState.hpp"
 
 ServerState::ServerState(const std::string& password) : _password(password)
@@ -78,4 +80,16 @@ void ServerState::removeChannelIfEmpty(const std::string& name)
 bool ServerState::checkPassword(const std::string& input) const
 {
     return input == _password;
+}
+
+void ServerState::tryRegister(Client* client)
+{
+    if (!client || client->isRegistered())
+          return;
+
+    if (!client->hasPass() || client->getNickname().empty() || client->getUsername().empty())
+          return;
+
+    client->setIsRegistered(true);
+    reply(client, 1, ":Welcome to IRC " + client->getNickname());
 }
