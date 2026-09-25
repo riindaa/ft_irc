@@ -13,15 +13,23 @@ void cmdNick(Client* client, const Command& cmd, ServerState& state)
     if (cmd.params.empty())
         return reply(client, 431, ":No nickname given");
 
-    if (!isValidNickname(cmd.params[0]))
-        return reply(client, 432, cmd.params[0] + " :Erroneous nickname");
+    const std::string& nickname = cmd.params[0];
 
-    Client* foundNickUser = state.getClientByNick(cmd.params[0]);
+    if (!isValidNickname(nickname))
+        return reply(client, 432, nickname + " :Erroneous nickname");
+
+    Client* foundNickUser = state.getClientByNick(nickname);
 
     if (foundNickUser && foundNickUser != client)
-        return reply(client, 433, cmd.params[0] + " :Nickname already used");
+        return reply(client, 433, nickname + " :Nickname already used");
 
-    client->setNickname(cmd.params[0]);
+    if (nickname == client->getNickname())
+        return;
+
+    if (client->isRegistered())
+        client->appendOutBuff(":" + client->getNickname() + " NICK :" + nickname + "\r\n");
+
+    client->setNickname(nickname);
     state.tryRegister(client);
 }
 
