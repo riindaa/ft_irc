@@ -53,7 +53,7 @@ public:
 
     void disconnectClient(int fd);
     void updatePollEvents(int client_fd);
-    void Server::handleClientWrite(int client_fd);
+    void handleClientWrite(int client_fd);
 
 };
 

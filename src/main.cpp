@@ -9,17 +9,20 @@ int main(int ac, char**av)
 
     std::signal(SIGINT, handle_signal);
     std::signal(SIGQUIT, handle_signal);
-    std:;signal(SIGPIPE, SIG_IGN);
+    std::signal(SIGPIPE, SIG_IGN);
 
-    Server server(8080, "localhost", "password");
-
-    if (!server.setup())
+    int port = atoi(av[1]);
+    if (!port)
     {
-        server.~Server();
+        std::cerr << "Error: bad port\n";
         return 1;
     }
+
+    Server server(port, "localhost", av[2]);
+
+    if (!server.setup())
+        return 1;
     server.run();
 
-    server.~Server();
     return 0;
 }

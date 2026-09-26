@@ -253,6 +253,12 @@ void Server::run()
             int client_fd = _pollfds[i].fd;
             if (_pollfds[i].revents & (POLLHUP | POLLERR))
             {
+                if (client_fd == _fd)
+                {
+                    std::cerr << "Error: listening socket failed, shutting down server\n";
+                    server_running = false;
+                    break;
+                }
                 disconnectClient(_pollfds[i].fd);
                 --i;
                 continue;
