@@ -35,10 +35,23 @@ static bool isValidChannelName(const std::string& name)
     return true;
 }
 
+static void joinChannel(Client* client, const std::string& name, ServerState& state)
+{
+    Channel* channel = state.getChannel(name);
+    bool isNew = (channel == NULL);
+
+    if (isNew)
+        channel = state.createChannel(name);
+
+    if (channel->isMember(client))
+        return;
+
+    channel->addClient(client, isNew);
+
+}
+
 void cmdJoin(Client* client, const Command& cmd, ServerState& state)
 {
-    (void)state;
-
     if (!client)
         return;
 
@@ -54,13 +67,14 @@ void cmdJoin(Client* client, const Command& cmd, ServerState& state)
     if (cmd.params.size() > 1)
         keys = split(cmd.params[1], ',');
 
-    for (std::vector<std::string>::size_type i = 0; 
-            i < channels.size(); ++i)
+    for (std::vector<std::string>::size_type i = 0; i < channels.size(); ++i)
     {
         if (!isValidChannelName(channels[i]))
         {
             reply(client, 403, channels[i] + " :No such channel");
             continue;
         }
+        
+        joinChannel(client, channels[i], state);
     }
 }
