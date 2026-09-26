@@ -18,7 +18,7 @@ int main(int ac, char**av)
         return 1;
     }
 
-    Server server(port, "localhost", av[2]);
+    Server server(port, "0.0.0.0", av[2]);
 
     if (!server.setup())
         return 1;
