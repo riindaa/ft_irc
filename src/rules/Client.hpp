@@ -23,8 +23,10 @@ class Client
 
     std::set<Channel *> _channels;
 
+    Client(const Client&);
+    Client& operator=(const Client&);
+
   public:
-    Client();
     Client(int fd);
     ~Client();
 

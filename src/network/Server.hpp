@@ -36,6 +36,9 @@ private:
     void acceptNewConnection();
     void handleClientData(int client_fd);
 
+    Server(const Server&);
+    Server& operator=(const Server&);
+
 public:
     Server(int port, const std::string &host, const std::string &password);
     ~Server();

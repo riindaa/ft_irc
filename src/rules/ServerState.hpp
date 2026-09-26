@@ -3,8 +3,10 @@
 
 #include "Client.hpp"
 #include "Channel.hpp"
+#include <unistd.h>
 #include <string>
 #include <map>
+#include <vector>
 
 class ServerState {
 private:

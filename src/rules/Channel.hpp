@@ -20,6 +20,9 @@ class Channel
     bool _inviteOnly;
     bool _topicRestricted;
 
+    Channel(const Channel&);
+    Channel& operator=(const Channel&);
+
   public:
     Channel(const std::string &name, const std::string &key = "");
     ~Channel();

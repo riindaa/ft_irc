@@ -2,7 +2,7 @@
 #include "Channel.hpp"
 #include <unistd.h>
 
-Client::Client(int fd) : _fd(fd), _hasPassword(false), _isRegistered(false)
+Client::Client(int fd) : _fd(fd), _isRegistered(false), _hasPassword(false)
 {
 }
 

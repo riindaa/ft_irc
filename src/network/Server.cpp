@@ -3,7 +3,7 @@
 volatile sig_atomic_t server_running = true;
 
 Server::Server(int port, const std::string &host, const std::string &password)
-    : _host(host), _port(port), _fd(-1), _state(password)
+    : _fd(-1), _port(port), _host(host), _state(password)
 {
 }
 
@@ -143,7 +143,6 @@ void Server::acceptNewConnection()
 
 void Server::disconnectClient(int fd)
 {
-    close(fd);
     for (std::vector<struct pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it)
     {
         if (it->fd == fd)
@@ -158,6 +157,8 @@ void Server::disconnectClient(int fd)
         _state.removeClientFromAllChannels(client);
         _state.removeClient(fd);
     }
+    else
+        close(fd);
 }
 
 void Server::updatePollEvents(int client_fd)
@@ -183,8 +184,10 @@ void Server::handleClientWrite(int client_fd)
 {
     Client* client = _state.getClientByFd(client_fd);
     if (!client)
+    {
+        disconnectClient(client_fd);
         return;
-
+    }
     const std::string& outBuff = client->getOutBuff();
     if (outBuff.empty())
     {
@@ -252,6 +255,7 @@ void Server::run()
             {
                 disconnectClient(_pollfds[i].fd);
                 --i;
+                continue;
             }
             else if (_pollfds[i].revents & (POLLIN))
             {
@@ -265,6 +269,7 @@ void Server::run()
                     handleClientData(_pollfds[i].fd);
                     if (i < _pollfds.size() && _pollfds[i].fd != client_fd)
                         --i;
+                    continue;
                 }
             }
             if (i < _pollfds.size() && (_pollfds[i].revents & POLLOUT))

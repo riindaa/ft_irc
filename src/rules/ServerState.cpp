@@ -8,6 +8,32 @@ ServerState::~ServerState()
 {
 }
 
+void ServerState::removeClientFromAllChannels(Client* client)
+{
+    if (!client)
+        return;
+
+    std::vector<std::string> namesToCheck;
+
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin();
+         it != _channels.end(); ++it)
+    {
+        Channel* channel = it->second;
+        if (channel && channel->isMember(client))
+        {
+            channel->removeClient(client);
+            client->removeChannel(channel);
+            namesToCheck.push_back(it->first);
+        }
+    }
+
+    for (std::vector<std::string>::iterator it = namesToCheck.begin();
+         it != namesToCheck.end(); ++it)
+    {
+        removeChannelIfEmpty(*it);
+    }
+}
+
 Client* ServerState::getClientByFd(int fd)
 {
     std::map<int, Client*>::iterator it = _clients.find(fd);
@@ -48,11 +74,27 @@ void ServerState::addClient(int fd, Client* client)
 void ServerState::removeClient(int fd)
 {
     std::map<int, Client*>::iterator it = _clients.find(fd);
-    if (it != _clients.end())
+    if (it == _clients.end())
+        throw std::runtime_error("Error: client not found");
+    delete it->second;
+    _clients.erase(it);
+}
+
+void ServerState::cleanUp()
+{
+    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
-        delete it->second;
-        _clients.erase(it);
+        if (it->second)
+            delete it->second;
     }
+    _clients.clear();
+
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+    {
+        if (it->second)
+            delete it->second;
+    }
+    _channels.clear();
 }
 
 Channel* ServerState::createChannel(const std::string& name)
@@ -76,30 +118,6 @@ void ServerState::removeChannelIfEmpty(const std::string& name)
     {
         delete it->second;
         _channels.erase(it);
-    }
-}
-
-void ServerState::removeClientFromAllChannels(Client* client)
-{
-    if (!client)
-        return;
-
-    std::map<std::string, Channel*>::iterator it = _channels.begin();
-
-    while (it != _channels.end())
-    {
-        Channel* channel = it->second;
-
-        channel->removeClient(client);
-        channel->removeInvite(client);
-
-        if (channel->isEmpty())
-        {
-            delete channel;
-            _channels.erase(it++);
-        }
-        else
-            ++it;
     }
 }
 
