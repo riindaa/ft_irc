@@ -75,6 +75,30 @@ void ServerState::removeChannelIfEmpty(const std::string& name)
     }
 }
 
+void ServerState::removeClientFromAllChannels(Client* client)
+{
+    if (!client)
+        return;
+
+    std::map<std::string, Channel*>::iterator it = _channels.begin();
+
+    while (it != _channels.end())
+    {
+        Channel* channel = it->second;
+
+        channel->removeClient(client);
+        channel->removeInvite(client);
+
+        if (channel->isEmpty())
+        {
+            delete channel;
+            _channels.erase(it++);
+        }
+        else
+            ++it;
+    }
+}
+
 bool ServerState::checkPassword(const std::string& input) const
 {
     return input == _password;
