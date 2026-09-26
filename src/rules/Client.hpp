@@ -29,6 +29,8 @@ class Client
     ~Client();
 
     int getFd() const;
+    const std::string getPrefix() const;
+    
     const std::string &getNickname() const;
     const std::string &getUsername() const;
     const std::string &getRealname() const;
