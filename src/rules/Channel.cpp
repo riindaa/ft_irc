@@ -10,9 +10,6 @@ Channel::~Channel()
 {
 }
 
-Channel::~Channel()
-{
-}
 
 const std::string& Channel::getName() const
 {

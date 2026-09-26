@@ -51,7 +51,8 @@ class Client
 
     void appendInBuff(const std::string &str);
     void appendOutBuff(const std::string &str);
-    void clearInBuff();
+    void clearInBuff(int len);
+    void clearOutBuff(int bytes);
 
     bool extractNextCommand(std::string &command_line);
 

@@ -103,9 +103,20 @@ void Client::appendOutBuff(const std::string& str)
     _outBuff += str;
 }
 
-void Client::clearInBuff()
+void Client::clearInBuff(int len)
 {
-    _inBuff.clear();
+    if (len < 0)
+        _inBuff.clear();
+    else
+        _inBuff.erase(0, len);
+}
+
+void Client::clearOutBuff(int len)
+{
+    if (len < 0)
+        _outBuff.clear();
+    else
+        _outBuff.erase(0, len);
 }
 
 void Client::closeClient()

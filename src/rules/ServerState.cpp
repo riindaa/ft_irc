@@ -47,8 +47,12 @@ void ServerState::addClient(int fd, Client* client)
 
 void ServerState::removeClient(int fd)
 {
-    if (_clients.erase(fd) == 0)
-        throw std::runtime_error("Error: client not found");
+    std::map<int, Client*>::iterator it = _clients.find(fd);
+    if (it != _clients.end())
+    {
+        delete it->second;
+        _clients.erase(it);
+    }
 }
 
 Channel* ServerState::createChannel(const std::string& name)

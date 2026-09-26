@@ -49,6 +49,9 @@ public:
     int getFd() const;
 
     void disconnectClient(int fd);
+    void updatePollEvents(int client_fd);
+    void Server::handleClientWrite(int client_fd);
+
 };
 
 void handle_signal(int sig);
