@@ -35,6 +35,25 @@ static bool isValidChannelName(const std::string& name)
     return true;
 }
 
+static void sendMembersToNewClient(Channel* channel, Client* client)
+{
+    std::string names;
+    const std::map<Client*, bool>& members = channel->getClients();
+
+    for (std::map<Client*, bool>::const_iterator it = members.begin();
+            it != members.end(); ++it)
+    {
+        if (!names.empty())
+            names += " ";
+        if (it->second)
+            names += "@";
+        names += it->first->getNickname();
+    }
+
+    reply(client, 353, "= " + channel->getName() + " :" + names);
+    reply(client, 366, channel->getName() + " :End of /NAMES list");
+}
+
 static void joinChannel(Client* client, const std::string& name, ServerState& state)
 {
     Channel* channel = state.getChannel(name);
@@ -47,7 +66,13 @@ static void joinChannel(Client* client, const std::string& name, ServerState& st
         return;
 
     channel->addClient(client, isNew);
+    client->addChannel(channel);
+    channel->broadcast(client->getPrefix() + " JOIN " + name + "\r\n");
 
+    if (!channel->getTopic().empty())
+        reply(client, 332, name + " :" + channel->getTopic());
+
+    sendMembersToNewClient(channel, client);
 }
 
 void cmdJoin(Client* client, const Command& cmd, ServerState& state)
@@ -74,7 +99,7 @@ void cmdJoin(Client* client, const Command& cmd, ServerState& state)
             reply(client, 403, channels[i] + " :No such channel");
             continue;
         }
-        
+
         joinChannel(client, channels[i], state);
     }
 }
