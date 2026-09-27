@@ -1,6 +1,6 @@
 #include "Commands.hpp"
 
-void cmdPass(Client* client, const Command& cmd, ServerState& state)
+void cmdPrivmsg(Client* client, const Command& cmd, ServerState& state)
 {
     if (!client)
         return;
