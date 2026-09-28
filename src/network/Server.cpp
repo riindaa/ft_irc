@@ -1,15 +1,16 @@
 #include "Server.hpp"
 
-volatile __sig_atomic_t server_running = true;
+volatile sig_atomic_t server_running = true;
 
 Server::Server(int port, const std::string &host, const std::string &password)
-    : _host(host), _port(port), _fd(-1), _state(password)
+    : _fd(-1), _port(port), _host(host), _state(password)
 {
 }
 
 Server::~Server()
 {
     closeSocket();
+    _state.cleanUp();
 }
 
 bool Server::set_non_blocking(int fd)
@@ -103,6 +104,7 @@ bool Server::setup()
     if (listen(_fd, SOMAXCONN) < 0)
     {
         std::cerr << "Error listen: " << std::strerror(errno) << "\n";
+        closeSocket();
         return false;
     }
     return true;
@@ -135,11 +137,12 @@ void Server::acceptNewConnection()
         return;
     }
     create_pfd(client_fd);
+    Client *client = new Client(client_fd);
+    _state.addClient(client_fd, client);
 }
 
 void Server::disconnectClient(int fd)
 {
-    close(fd);
     for (std::vector<struct pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it)
     {
         if (it->fd == fd)
@@ -154,6 +157,51 @@ void Server::disconnectClient(int fd)
         _state.removeClientFromAllChannels(client);
         _state.removeClient(fd);
     }
+    else
+        close(fd);
+}
+
+void Server::updatePollEvents(int client_fd)
+{
+    Client* client = _state.getClientByFd(client_fd);
+    if (!client)
+        return;
+
+    for (size_t i = 0; i < _pollfds.size(); ++i)
+    {
+        if (_pollfds[i].fd == client_fd)
+        {
+            if (!client->getOutBuff().empty())
+                _pollfds[i].events = POLLIN | POLLOUT;
+            else
+                _pollfds[i].events = POLLIN;
+            break;
+        }
+    }
+}
+
+void Server::handleClientWrite(int client_fd)
+{
+    Client* client = _state.getClientByFd(client_fd);
+    if (!client)
+    {
+        disconnectClient(client_fd);
+        return;
+    }
+    const std::string& outBuff = client->getOutBuff();
+    if (outBuff.empty())
+    {
+        updatePollEvents(client_fd);
+        return;
+    }
+    ssize_t bytes_sent = send(client_fd, outBuff.c_str(), outBuff.size(), 0);
+    if (bytes_sent > 0)
+    {
+        client->clearOutBuff(bytes_sent);
+        updatePollEvents(client_fd);
+    }
+    else
+        disconnectClient(client_fd);
 }
 
 void Server::handleClientData(int client_fd)
@@ -181,7 +229,8 @@ void Server::handleClientData(int client_fd)
         //executer
     }
     if (client->getInBuff().size() > 512)
-        client->clearInBuff();
+        client->clearInBuff(-1);
+    updatePollEvents(client_fd);
 }
 
 void Server::run()
@@ -201,12 +250,39 @@ void Server::run()
         }
         for (size_t i = 0; i < _pollfds.size(); ++i)
         {
-            if (_pollfds[i].revents & POLLIN)
+            int client_fd = _pollfds[i].fd;
+            if (_pollfds[i].revents & (POLLHUP | POLLERR))
+            {
+                if (client_fd == _fd)
+                {
+                    std::cerr << "Error: listening socket failed, shutting down server\n";
+                    server_running = false;
+                    break;
+                }
+                disconnectClient(_pollfds[i].fd);
+                --i;
+                continue;
+            }
+            else if (_pollfds[i].revents & (POLLIN))
             {
                 if (_pollfds[i].fd == _fd)
+                {
                     acceptNewConnection();
+                    continue;
+                }
                 else
+                {
                     handleClientData(_pollfds[i].fd);
+                    if (i < _pollfds.size() && _pollfds[i].fd != client_fd)
+                        --i;
+                    continue;
+                }
+            }
+            if (i < _pollfds.size() && (_pollfds[i].revents & POLLOUT))
+            {
+                handleClientWrite(client_fd);
+                if (i < _pollfds.size() && _pollfds[i].fd != client_fd)
+                    --i;
             }
         }
     }

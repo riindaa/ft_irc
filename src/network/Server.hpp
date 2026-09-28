@@ -36,6 +36,9 @@ private:
     void acceptNewConnection();
     void handleClientData(int client_fd);
 
+    Server(const Server&);
+    Server& operator=(const Server&);
+
 public:
     Server(int port, const std::string &host, const std::string &password);
     ~Server();
@@ -49,6 +52,9 @@ public:
     int getFd() const;
 
     void disconnectClient(int fd);
+    void updatePollEvents(int client_fd);
+    void handleClientWrite(int client_fd);
+
 };
 
 void handle_signal(int sig);
