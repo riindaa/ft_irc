@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "../parser/Parser.hpp"
 
 volatile sig_atomic_t server_running = true;
 
@@ -225,8 +226,16 @@ void Server::handleClientData(int client_fd)
     std::string command_line;
     while (client->extractNextCommand(command_line))
     {
-        //parser
-        //executer
+        try
+        {
+             Command cmd = Parser::parse(command_line);
+             _dispatcher.dispatch(client, cmd, _state);
+        }
+        catch(const Parser::InvalidMessageException& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+
     }
     if (client->getInBuff().size() > 512)
         client->clearInBuff(-1);

@@ -1,7 +1,7 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-#include "Command.hpp"
+#include "../rules/commands/Command.hpp"
 #include <string>
 #include <exception>
 

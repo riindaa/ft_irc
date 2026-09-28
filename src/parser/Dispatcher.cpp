@@ -1,37 +1,29 @@
-#include "Dispatcher.hpp"
-#include "Server.hpp"
-#include "Client.hpp"
-#include "Command.hpp"
 #include <iostream>
-
+#include "Dispatcher.hpp"
+#include "../rules/commands/Pass.hpp"
+#include "../rules/commands/Nick.hpp"
+#include "../rules/commands/User.hpp"
+#include "../rules/commands/Join.hpp"
 
 Dispatcher::Dispatcher()
 {
-	_handlers["PASS"] = &Server::handleNick;
-	_handlers["NICK"] = &Server::handleNick;
-	_handlers["USER"] = &Server::handleNick;
-	_handlers["JOIN"] = &Server::handleNick;
-	_handlers["PRIVMSG"] = &Server::handleNick;
-	_handlers["KICK"] = &Server::handleNick;
-	_handlers["INVITE"] = &Server::handleNick;
-	_handlers["TOPIC"] = &Server::handleNick;
-	_handlers["MODE"] = &Server::handleNick;
+	_handlers["PASS"] = &cmdPass;
+	_handlers["NICK"] = &cmdNick;
+	_handlers["USER"] = &cmdUser;
+	_handlers["JOIN"] = &cmdJoin;
 }
 
 Dispatcher::~Dispatcher(){}
 
-void Dispatcher::dispatch(Server& server, Client* client, const Command& cmd)
+void Dispatcher::dispatch(Client* client, const Command& cmd, ServerState& state)
 {
+    std::map<std::string, CommandHandler>::iterator it = _handlers.find(cmd.name);
 
+    if (it == _handlers.end())
+    {
+        std::cout << "Unknown command: " << cmd.name << std::endl;
+        return;
+    }
 
-	std::map<std::string, CommandHandler>::iterator it;
-	it = _handlers.find(cmd.name);
-	if (it == _handlers.end())
-	{
-		// TODO: ERR_UNKNOWNCOMMAND (421)
-		std::cout << "Unknown command: " << cmd.name << std::endl;
-		return;
-	}
-	std::cout << "Dispatching: " << cmd.name << std::endl;
-	(server.*(it->second))(client, cmd);
+    (it->second)(client, cmd, state);
 }

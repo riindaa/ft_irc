@@ -17,7 +17,9 @@
 #include <poll.h>
 #include <csignal>
 
-#include "ServerState.hpp"
+#include "../rules/ServerState.hpp"
+#include "../parser/Dispatcher.hpp"
+
 
 class Server {
 private:
@@ -25,8 +27,9 @@ private:
     int _port;
     std::string _host;
     std::vector<pollfd> _pollfds;
-    
     ServerState _state;
+    Dispatcher _dispatcher;
+
 
     bool set_non_blocking(int fd);
     bool set_sockopt();
