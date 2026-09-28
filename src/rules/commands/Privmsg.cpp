@@ -6,14 +6,14 @@ void cmdPrivmsg(Client* client, const Command& cmd, ServerState& state)
         return;
     
     if (cmd.params.empty())
-        return reply(client, 461, cmd.name + " :Not enough parameters");
+        return reply(client, 411, cmd.name + " :No recipient given (PRIVMSG)");
 
-    if (client->isRegistered())
-        return reply(client, 462, ":You may not reregister");
+    if (!client->isRegistered())
+        return reply(client, 451, ":You have not registered");
 
-    if (!state.checkPassword(cmd.params[0]))
-        return reply(client, 464, ":Password incorrect");
-
-    client->setHasPass(true);
-    state.tryRegister(client);
+    if (cmd.params.size() < 2 || !cmd.params[1])
+        return reply(client, 412, ":No text to send");
+    
+    if (!state.getClientByNick(cmd.params[0]))
+        return reply(client, 401, cmd.params[0]) + " :No such nick/channel";
 }
