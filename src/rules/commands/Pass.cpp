@@ -1,7 +1,4 @@
-#include "Pass.hpp"
-#include "../Client.hpp"
-#include "../Reply.hpp"
-#include "../ServerState.hpp"
+#include "Commands.hpp"
 
 void cmdPass(Client* client, const Command& cmd, ServerState& state)
 {

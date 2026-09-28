@@ -1,7 +1,4 @@
-#include "User.hpp"
-#include "../Client.hpp"
-#include "../Reply.hpp"
-#include "../ServerState.hpp"
+#include "Commands.hpp"
 
 void cmdUser(Client* client, const Command& cmd, ServerState& state)
 {

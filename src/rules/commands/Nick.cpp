@@ -1,9 +1,28 @@
 #include <cctype>
 
-#include "Nick.hpp"
-#include "../Client.hpp"
-#include "../Reply.hpp"
-#include "../ServerState.hpp"
+#include "Commands.hpp"
+
+static bool isSpecial(char c)
+{
+    return std::string("[]\\`_^{|}").find(c) != std::string::npos;
+}
+
+static bool isValidNickname(const std::string& nick)
+{
+    if (nick.empty() || nick.length() > 9)
+        return false;
+
+    if (!std::isalpha(static_cast<unsigned char>(nick[0])) && !isSpecial(nick[0]))
+        return false;
+
+    for (size_t i = 0; i < nick.length(); ++i)
+    {
+        if (!std::isalnum(static_cast<unsigned char>(nick[i])) && !isSpecial(nick[i]) 
+                && nick[i] != '-')
+            return false;
+    }
+    return true;
+}
 
 void cmdNick(Client* client, const Command& cmd, ServerState& state)
 {
@@ -31,26 +50,4 @@ void cmdNick(Client* client, const Command& cmd, ServerState& state)
 
     client->setNickname(nickname);
     state.tryRegister(client);
-}
-
-static bool isSpecial(char c)
-{
-    return std::string("[]\\`_^{|}").find(c) != std::string::npos;
-}
-
-bool isValidNickname(const std::string& nick)
-{
-    if (nick.empty() || nick.length() > 9)
-        return false;
-
-    if (!std::isalpha(static_cast<unsigned char>(nick[0])) && !isSpecial(nick[0]))
-        return false;
-
-    for (size_t i = 0; i < nick.length(); ++i)
-    {
-        if (!std::isalnum(static_cast<unsigned char>(nick[i])) && !isSpecial(nick[i]) 
-                && nick[i] != '-')
-            return false;
-    }
-    return true;
 }
