@@ -108,7 +108,7 @@ void Channel::addClient(Client* client, bool isOp)
 {
     if (client)
     {
-        _clients.insert(std::make_pair(client, isOp));
+        _clients[client] = isOp;
         removeInvite(client);
     }
 }

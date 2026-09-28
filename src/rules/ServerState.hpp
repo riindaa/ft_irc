@@ -3,8 +3,10 @@
 
 #include "Client.hpp"
 #include "Channel.hpp"
+#include <unistd.h>
 #include <string>
 #include <map>
+#include <vector>
 
 class ServerState {
 private:
@@ -27,6 +29,8 @@ public:
     void removeClientFromAllChannels(Client* client);
 
     bool checkPassword(const std::string& input) const;
+
+    void cleanUp();
     void tryRegister(Client* client);
 };
 

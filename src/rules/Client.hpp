@@ -23,8 +23,10 @@ class Client
 
     std::set<Channel *> _channels;
 
+    Client(const Client&);
+    Client& operator=(const Client&);
+
   public:
-    Client();
     Client(int fd);
     ~Client();
 
@@ -53,7 +55,8 @@ class Client
 
     void appendInBuff(const std::string &str);
     void appendOutBuff(const std::string &str);
-    void clearInBuff();
+    void clearInBuff(int len);
+    void clearOutBuff(int bytes);
 
     bool extractNextCommand(std::string &command_line);
 
