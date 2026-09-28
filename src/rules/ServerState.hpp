@@ -23,7 +23,7 @@ public:
     Channel* getChannel(const std::string& name);
 
     void addClient(int fd, Client* client);
-    void removeClient(int fd); 
+    void removeClient(int fd);
     Channel* createChannel(const std::string& name);
     void removeChannelIfEmpty(const std::string& name);
     void removeClientFromAllChannels(Client* client);
@@ -31,6 +31,7 @@ public:
     bool checkPassword(const std::string& input) const;
 
     void cleanUp();
+    void tryRegister(Client* client);
 };
 
 #endif

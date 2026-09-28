@@ -10,7 +10,6 @@ Channel::~Channel()
 {
 }
 
-
 const std::string& Channel::getName() const
 {
     return _name;
@@ -70,7 +69,7 @@ bool Channel::isOperator(Client* client) const
     std::map<Client*, bool>::const_iterator it = _clients.find(client);
     if (it != _clients.end())
         return it->second;
-    return false; 
+    return false;
 }
 
 bool Channel::isInvited(Client* client) const

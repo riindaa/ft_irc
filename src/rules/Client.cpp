@@ -16,6 +16,11 @@ int Client::getFd() const
     return _fd;
 }
 
+const std::string Client::getPrefix() const
+{
+    return ":" + getNickname() + "!" + getUsername() + "@localhost";
+}
+
 const std::string& Client::getNickname() const
 {
     return _nickname;
