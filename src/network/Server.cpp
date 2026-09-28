@@ -249,6 +249,11 @@ void Server::run()
     create_pfd(_fd);
     while (server_running)
     {
+        for (size_t i = 0; i < _pollfds.size(); ++i)
+        {
+            if (_pollfds[i].fd != _fd)
+                updatePollEvents(_pollfds[i].fd);
+        }
         int poll_count = poll(&_pollfds[0], _pollfds.size(), -1);
         if (poll_count < 0)
         {
