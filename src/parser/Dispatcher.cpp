@@ -1,9 +1,6 @@
 #include <iostream>
 #include "Dispatcher.hpp"
-#include "../rules/commands/Pass.hpp"
-#include "../rules/commands/Nick.hpp"
-#include "../rules/commands/User.hpp"
-#include "../rules/commands/Join.hpp"
+#include "../rules/commands/Commands.hpp"
 
 Dispatcher::Dispatcher()
 {
@@ -11,6 +8,7 @@ Dispatcher::Dispatcher()
 	_handlers["NICK"] = &cmdNick;
 	_handlers["USER"] = &cmdUser;
 	_handlers["JOIN"] = &cmdJoin;
+    _handlers["PRIVMSG"] = &cmdPrivmsg;
 }
 
 Dispatcher::~Dispatcher(){}
