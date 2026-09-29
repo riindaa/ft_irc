@@ -17,6 +17,7 @@ SRC = 	src/main.cpp \
 		src/rules/commands/Pass.cpp \
 		src/rules/commands/Privmsg.cpp \
 		src/rules/commands/User.cpp \
+		src/rules/commands/Topic.cpp \
  		src/rules/commands/utils/Split.cpp \
 
 HDR = 	include/irc.hpp \

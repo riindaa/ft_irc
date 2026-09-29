@@ -9,6 +9,7 @@ Dispatcher::Dispatcher()
 	_handlers["USER"] = &cmdUser;
 	_handlers["JOIN"] = &cmdJoin;
     _handlers["PRIVMSG"] = &cmdPrivmsg;
+    _handlers["TOPIC"] = &cmdTopic;
 }
 
 Dispatcher::~Dispatcher(){}
