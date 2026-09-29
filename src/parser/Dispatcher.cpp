@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Dispatcher.hpp"
 #include "../rules/commands/Commands.hpp"
 
@@ -10,6 +9,8 @@ Dispatcher::Dispatcher()
 	_handlers["JOIN"] = &cmdJoin;
     _handlers["PRIVMSG"] = &cmdPrivmsg;
     _handlers["TOPIC"] = &cmdTopic;
+    _handlers["KICK"] = &cmdKick;
+    _handlers["INVITE"] = &cmdInvite;
 }
 
 Dispatcher::~Dispatcher(){}
@@ -20,7 +21,7 @@ void Dispatcher::dispatch(Client* client, const Command& cmd, ServerState& state
 
     if (it == _handlers.end())
     {
-        std::cout << "Unknown command: " << cmd.name << std::endl;
+        reply(client, 421, cmd.name + " :Unknown command");
         return;
     }
 
