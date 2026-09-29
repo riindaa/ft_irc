@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Dispatcher.hpp"
 #include "../rules/commands/Commands.hpp"
 
@@ -21,7 +20,7 @@ void Dispatcher::dispatch(Client* client, const Command& cmd, ServerState& state
 
     if (it == _handlers.end())
     {
-        std::cout << "Unknown command: " << cmd.name << std::endl;
+        reply(client, 421, cmd.name + " :Unknown command");
         return;
     }
 
