@@ -10,6 +10,7 @@ Dispatcher::Dispatcher()
 	_handlers["JOIN"] = &cmdJoin;
     _handlers["PRIVMSG"] = &cmdPrivmsg;
     _handlers["KICK"] = &cmdKick;
+    _handlers["INVITE"] = &cmdInvite;
 }
 
 Dispatcher::~Dispatcher(){}
