@@ -12,11 +12,13 @@ SRC = 	src/main.cpp \
 		src/rules/Client.cpp \
 		src/rules/Reply.cpp \
 		src/rules/ServerState.cpp \
-		src/rules/commands/Join.cpp \
 		src/rules/commands/Nick.cpp \
 		src/rules/commands/Pass.cpp \
-		src/rules/commands/Privmsg.cpp \
 		src/rules/commands/User.cpp \
+		src/rules/commands/Join.cpp \
+		src/rules/commands/Privmsg.cpp \
+		src/rules/commands/Kick.cpp \
+		src/rules/commands/Invite.cpp \
  		src/rules/commands/utils/Split.cpp \
 
 HDR = 	include/irc.hpp \
