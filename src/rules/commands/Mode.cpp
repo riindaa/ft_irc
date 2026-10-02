@@ -66,12 +66,29 @@ static bool handleChannelLimit(Channel* channel, const Command& cmd, size_t& par
 
 		if (limit > 0)
 			channel->setUserLimit(limit);
-
 		paramIndex++;
 	}
 	else
 		channel->setUserLimit(0);
+
 	return true;
+}
+
+static void broadcastMode(Client* client, Channel* channel, bool sign, const std::string& mode, const std::string& param = "")
+{
+	std::string modeSign;
+
+	if (sign)
+		modeSign = " +";
+	else
+		modeSign = " -";
+
+	std::string message = client->getPrefix() + " MODE " + channel->getName() + modeSign + mode;
+
+	if (!param.empty())
+		message += " " + param;
+
+	channel->broadcast(message + "\r\n");
 }
 
 
@@ -118,13 +135,27 @@ void cmdMode(Client* client, const Command& cmd, ServerState& state)
 			continue;
 
 		if (cmd.params[1][i] == 'i')
+		{
 			channel->setInviteOnly(sign);
+			broadcastMode(client, channel, sign, "i");
+		}
 		else if (cmd.params[1][i] == 't')
+		{
 			channel->setTopicRestricted(sign);
+			broadcastMode(client, channel, sign, "t");
+		}
+
 		else if (cmd.params[1][i] == 'k')
 		{
+			std::string key;
+
+			if (sign && paramIndex < cmd.params.size())
+				key = cmd.params[paramIndex];
+
 			if (!handleChannelKey(channel, cmd, paramIndex, sign))
 				continue;
+
+			broadcastMode(client, channel, sign, "k", key);
 		}
 		else if (cmd.params[1][i] == 'o')
 		{
@@ -138,12 +169,20 @@ void cmdMode(Client* client, const Command& cmd, ServerState& state)
 				continue;
 
 			channel->setOperator(target, sign);
+			broadcastMode(client, channel, sign, "o", nickname);
 		}
 
 		else if (cmd.params[1][i] == 'l')
 		{
+			std::string limit;
+
+			if (sign && paramIndex < cmd.params.size())
+				limit = cmd.params[paramIndex];
+
 			if (!handleChannelLimit(channel, cmd, paramIndex, sign))
 				continue;
+
+			broadcastMode(client, channel, sign, "l", limit);
 		}
 
 		else
