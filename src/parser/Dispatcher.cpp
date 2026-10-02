@@ -11,6 +11,7 @@ Dispatcher::Dispatcher()
     _handlers["TOPIC"] = &cmdTopic;
     _handlers["KICK"] = &cmdKick;
     _handlers["INVITE"] = &cmdInvite;
+    _handlers["MODE"] = &cmdMode;
 }
 
 Dispatcher::~Dispatcher(){}

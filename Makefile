@@ -20,6 +20,7 @@ SRC = 	src/main.cpp \
 		src/rules/commands/Privmsg.cpp \
 		src/rules/commands/Kick.cpp \
 		src/rules/commands/Invite.cpp \
+		src/rules/commands/Mode.cpp \
  		src/rules/commands/utils/Split.cpp \
 
 HDR = 	include/irc.hpp \
