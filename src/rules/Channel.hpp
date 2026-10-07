@@ -41,7 +41,7 @@ class Channel
     bool isMember(Client *client) const;
     bool isOperator(Client *client) const;
     bool isInvited(Client *client) const;
-   
+
     void setTopic(const std::string &topic);
     void setKey(const std::string &key);
     void setUserLimit(size_t limit);
@@ -56,6 +56,9 @@ class Channel
     void removeInvite(Client *client);
 
     void broadcast(const std::string &message, Client *sender = NULL);
+
+    size_t getClientCount() const;
+    std::string getClientNames() const;
 };
 
 #endif

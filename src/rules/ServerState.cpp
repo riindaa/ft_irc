@@ -151,3 +151,8 @@ void ServerState::tryRegister(Client* client)
     client->setIsRegistered(true);
     reply(client, 1, ":Welcome to IRC " + client->getNickname());
 }
+
+Bot& ServerState::getBot()
+{
+    return _bot;
+}
