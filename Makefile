@@ -22,6 +22,7 @@ SRC = 	src/main.cpp \
 		src/rules/commands/Invite.cpp \
 		src/rules/commands/Mode.cpp \
  		src/rules/commands/utils/Split.cpp \
+		src/bot/Bot.cpp \
 
 HDR = 	include/irc.hpp \
 		src/network/Server.hpp \

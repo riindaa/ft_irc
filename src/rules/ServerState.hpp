@@ -7,12 +7,14 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "../bot/Bot.hpp"
 
 class ServerState {
 private:
     std::string _password;
     std::map<int, Client*> _clients;
     std::map<std::string, Channel*> _channels;
+    Bot _bot;
 
 public:
     ServerState(const std::string& password);
@@ -32,6 +34,8 @@ public:
 
     void cleanUp();
     void tryRegister(Client* client);
+
+    Bot& getBot();
 };
 
 #endif

@@ -150,3 +150,25 @@ void Channel::broadcast(const std::string& message, Client* sender)
             temp->appendOutBuff(message);
         }
 }
+
+
+size_t Channel::getClientCount() const
+{
+    return _clients.size();
+}
+
+std::string Channel::getClientNames() const
+{
+    std::string names;
+
+    for (std::map<Client*, bool>::const_iterator it = _clients.begin();
+         it != _clients.end(); ++it)
+    {
+        if (!names.empty())
+            names += " ";
+
+        names += it->first->getNickname();
+    }
+
+    return names;
+}

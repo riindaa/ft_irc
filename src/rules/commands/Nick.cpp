@@ -4,50 +4,50 @@
 
 static bool isSpecial(char c)
 {
-    return std::string("[]\\`_^{|}").find(c) != std::string::npos;
+	return std::string("[]\\`_^{|}").find(c) != std::string::npos;
 }
 
 static bool isValidNickname(const std::string& nick)
 {
-    if (nick.empty() || nick.length() > 9)
-        return false;
+	if (nick.empty() || nick.length() > 9)
+		return false;
 
-    if (!std::isalpha(static_cast<unsigned char>(nick[0])) && !isSpecial(nick[0]))
-        return false;
+	if (!std::isalpha(static_cast<unsigned char>(nick[0])) && !isSpecial(nick[0]))
+		return false;
 
-    for (size_t i = 0; i < nick.length(); ++i)
-    {
-        if (!std::isalnum(static_cast<unsigned char>(nick[i])) && !isSpecial(nick[i]) 
-                && nick[i] != '-')
-            return false;
-    }
-    return true;
+	for (size_t i = 0; i < nick.length(); ++i)
+	{
+		if (!std::isalnum(static_cast<unsigned char>(nick[i])) && !isSpecial(nick[i])
+				&& nick[i] != '-')
+			return false;
+	}
+	return true;
 }
 
 void cmdNick(Client* client, const Command& cmd, ServerState& state)
 {
-    if (!client)
-        return;
-    
-    if (cmd.params.empty())
-        return reply(client, 431, ":No nickname given");
+	if (!client)
+		return;
 
-    const std::string& nickname = cmd.params[0];
+	if (cmd.params.empty())
+		return reply(client, 431, ":No nickname given");
 
-    if (!isValidNickname(nickname))
-        return reply(client, 432, nickname + " :Erroneous nickname");
+	const std::string& nickname = cmd.params[0];
 
-    Client* foundNickUser = state.getClientByNick(nickname);
+	if (!isValidNickname(nickname))
+		return reply(client, 432, nickname + " :Erroneous nickname");
 
-    if (foundNickUser && foundNickUser != client)
-        return reply(client, 433, nickname + " :Nickname already used");
+	Client* foundNickUser = state.getClientByNick(nickname);
 
-    if (nickname == client->getNickname())
-        return;
+	if ((foundNickUser && foundNickUser != client) || state.getBot().isNickname(nickname))
+		return reply(client, 433, nickname + " :Nickname already used");
 
-    if (client->isRegistered())
-        client->appendOutBuff(":" + client->getNickname() + " NICK :" + nickname + "\r\n");
+	if (nickname == client->getNickname())
+		return;
 
-    client->setNickname(nickname);
-    state.tryRegister(client);
+	if (client->isRegistered())
+		client->appendOutBuff(":" + client->getNickname() + " NICK :" + nickname + "\r\n");
+
+	client->setNickname(nickname);
+	state.tryRegister(client);
 }
