@@ -1,5 +1,5 @@
 #include "Dispatcher.hpp"
-#include "../rules/commands/Commands.hpp"
+#include "../commands/Commands.hpp"
 
 Dispatcher::Dispatcher()
 {

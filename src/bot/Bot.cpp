@@ -1,6 +1,6 @@
 #include "Bot.hpp"
 #include <cctype>
-#include "../rules/Channel.hpp"
+#include "../state/Channel.hpp"
 #include <sstream>
 
 Bot::Bot() : _nickname("bot") {}

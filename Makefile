@@ -2,38 +2,38 @@ NAME = ircserv
 
 CPP = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
-INC = -Iinclude -Isrc/network -Isrc/rules -Isrc/rules/commands
+INC = -Iinclude -Isrc/server -Isrc/state -Isrc/commands
 
 SRC = 	src/main.cpp \
-		src/network/Server.cpp \
+		src/server/Server.cpp \
 		src/parser/Parser.cpp \
 		src/parser/Dispatcher.cpp \
-		src/rules/Channel.cpp \
-		src/rules/Client.cpp \
-		src/rules/Reply.cpp \
-		src/rules/ServerState.cpp \
-		src/rules/commands/Nick.cpp \
-		src/rules/commands/Pass.cpp \
-		src/rules/commands/User.cpp \
-		src/rules/commands/Topic.cpp \
-		src/rules/commands/Join.cpp \
-		src/rules/commands/Privmsg.cpp \
-		src/rules/commands/Kick.cpp \
-		src/rules/commands/Invite.cpp \
-		src/rules/commands/Mode.cpp \
- 		src/rules/commands/utils/Split.cpp \
+		src/state/Channel.cpp \
+		src/state/Client.cpp \
+		src/state/Reply.cpp \
+		src/state/ServerState.cpp \
+		src/commands/Nick.cpp \
+		src/commands/Pass.cpp \
+		src/commands/User.cpp \
+		src/commands/Topic.cpp \
+		src/commands/Join.cpp \
+		src/commands/Privmsg.cpp \
+		src/commands/Kick.cpp \
+		src/commands/Invite.cpp \
+		src/commands/Mode.cpp \
+ 		src/commands/utils/Split.cpp \
 		src/bot/Bot.cpp \
 
 HDR = 	include/irc.hpp \
-		src/network/Server.hpp \
+		src/server/Server.hpp \
 		src/parser/Dispatcher.hpp \
 		src/parser/Parser.hpp \
-		src/rules/Channel.hpp \
-		src/rules/Client.hpp \
-		src/rules/Reply.hpp \
-		src/rules/ServerState.hpp \
-		src/rules/commands/Command.hpp \
-		src/rules/commands/Commands.hpp \
+		src/state/Channel.hpp \
+		src/state/Client.hpp \
+		src/state/Reply.hpp \
+		src/state/ServerState.hpp \
+		src/commands/Command.hpp \
+		src/commands/Commands.hpp \
 
 OBJ = $(SRC:.cpp=.o)
 

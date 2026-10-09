@@ -5,9 +5,9 @@
 #include <vector>
 
 #include "Command.hpp"
-#include "../Client.hpp"
-#include "../ServerState.hpp"
-#include "../Reply.hpp"
+#include "../state/Client.hpp"
+#include "../state/ServerState.hpp"
+#include "../state/Reply.hpp"
 
 void cmdPass(Client* client, const Command& cmd, ServerState& state);
 void cmdNick(Client* client, const Command& cmd, ServerState& state);

@@ -1,10 +1,10 @@
 #ifndef IRC_HPP
 #define IRC_HPP
 
-#include "../src/rules/Channel.hpp"
-#include "../src/rules/Client.hpp"
-#include "../src/network/Server.hpp"
-#include "../src/rules/commands/Command.hpp"
-#include "../src/rules/ServerState.hpp"
+#include "../src/state/Channel.hpp"
+#include "../src/state/Client.hpp"
+#include "../src/server/Server.hpp"
+#include "../src/commands/Command.hpp"
+#include "../src/state/ServerState.hpp"
 
 #endif

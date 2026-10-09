@@ -17,7 +17,7 @@
 #include <poll.h>
 #include <csignal>
 
-#include "../rules/ServerState.hpp"
+#include "../state/ServerState.hpp"
 #include "../parser/Dispatcher.hpp"
 
 

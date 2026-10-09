@@ -4,9 +4,9 @@
 #include <map>
 #include <string>
 
-#include "../rules/ServerState.hpp"
-#include "../rules/Client.hpp"
-#include "../rules/commands/Command.hpp"
+#include "../state/ServerState.hpp"
+#include "../state/Client.hpp"
+#include "../commands/Command.hpp"
 
 
 class Dispatcher
