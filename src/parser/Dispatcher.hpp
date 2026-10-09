@@ -4,24 +4,21 @@
 #include <map>
 #include <string>
 
-#include "../state/ServerState.hpp"
-#include "../state/Client.hpp"
 #include "../commands/Command.hpp"
-
+#include "../state/Client.hpp"
+#include "../state/ServerState.hpp"
 
 class Dispatcher
 {
-	private:
-		typedef void (*CommandHandler)(Client*, const Command&, ServerState&);
+  private:
+    typedef void (*CommandHandler)(Client*, const Command&, ServerState&);
 
-		std::map<std::string, CommandHandler> _handlers;
+    std::map<std::string, CommandHandler> _handlers;
 
-	public:
-		Dispatcher();
-		~Dispatcher();
-		void dispatch(Client* client, const Command& cmd, ServerState& state);
-
-
+  public:
+    Dispatcher();
+    ~Dispatcher();
+    void dispatch(Client* client, const Command& cmd, ServerState& state);
 };
 
 #endif

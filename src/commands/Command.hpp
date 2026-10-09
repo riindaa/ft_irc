@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 
-struct Command {
+struct Command
+{
     std::string prefix;
     std::string name;
     std::vector<std::string> params;

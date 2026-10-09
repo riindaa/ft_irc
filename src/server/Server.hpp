@@ -3,33 +3,32 @@
 
 #include <arpa/inet.h>
 #include <cerrno>
+#include <csignal>
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
 #include <map>
 #include <netinet/in.h>
+#include <poll.h>
 #include <stdexcept>
 #include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <vector>
-#include <poll.h>
-#include <csignal>
 
-#include "../state/ServerState.hpp"
 #include "../parser/Dispatcher.hpp"
+#include "../state/ServerState.hpp"
 
-
-class Server {
-private:
+class Server
+{
+  private:
     int _fd;
     int _port;
     std::string _host;
     std::vector<pollfd> _pollfds;
     ServerState _state;
     Dispatcher _dispatcher;
-
 
     bool set_non_blocking(int fd);
     bool set_sockopt();
@@ -42,22 +41,21 @@ private:
     Server(const Server&);
     Server& operator=(const Server&);
 
-public:
-    Server(int port, const std::string &host, const std::string &password);
+  public:
+    Server(int port, const std::string& host, const std::string& password);
     ~Server();
 
     bool setup();
     void run();
     void closeSocket();
 
-    const std::string &getHost() const;
+    const std::string& getHost() const;
     int getPort() const;
     int getFd() const;
 
     void disconnectClient(int fd);
     void updatePollEvents(int client_fd);
     void handleClientWrite(int client_fd);
-
 };
 
 void handle_signal(int sig);

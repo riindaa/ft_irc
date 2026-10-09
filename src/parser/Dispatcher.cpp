@@ -3,10 +3,10 @@
 
 Dispatcher::Dispatcher()
 {
-	_handlers["PASS"] = &cmdPass;
-	_handlers["NICK"] = &cmdNick;
-	_handlers["USER"] = &cmdUser;
-	_handlers["JOIN"] = &cmdJoin;
+    _handlers["PASS"] = &cmdPass;
+    _handlers["NICK"] = &cmdNick;
+    _handlers["USER"] = &cmdUser;
+    _handlers["JOIN"] = &cmdJoin;
     _handlers["PRIVMSG"] = &cmdPrivmsg;
     _handlers["TOPIC"] = &cmdTopic;
     _handlers["KICK"] = &cmdKick;
@@ -14,7 +14,9 @@ Dispatcher::Dispatcher()
     _handlers["MODE"] = &cmdMode;
 }
 
-Dispatcher::~Dispatcher(){}
+Dispatcher::~Dispatcher()
+{
+}
 
 void Dispatcher::dispatch(Client* client, const Command& cmd, ServerState& state)
 {

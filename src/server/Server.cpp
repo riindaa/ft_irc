@@ -3,7 +3,7 @@
 
 volatile sig_atomic_t server_running = true;
 
-Server::Server(int port, const std::string &host, const std::string &password)
+Server::Server(int port, const std::string& host, const std::string& password)
     : _fd(-1), _port(port), _host(host), _state(password)
 {
 }
@@ -45,7 +45,7 @@ bool Server::set_bind()
         addr.sin_addr.s_addr = htonl(INADDR_ANY);
     addr.sin_port = htons(_port);
 
-    if (bind(_fd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) < 0)
+    if (bind(_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0)
     {
         std::cerr << "Error bind\n";
         return false;
@@ -63,7 +63,7 @@ int Server::getPort() const
     return _port;
 }
 
-const std::string &Server::getHost() const
+const std::string& Server::getHost() const
 {
     return _host;
 }
@@ -126,7 +126,7 @@ void Server::acceptNewConnection()
     struct sockaddr_in client_addr;
     socklen_t addr_len = sizeof(client_addr);
 
-    int client_fd = accept(_fd, (struct sockaddr *)&client_addr, &addr_len);
+    int client_fd = accept(_fd, (struct sockaddr*)&client_addr, &addr_len);
     if (client_fd < 0)
     {
         std::cerr << "Error accept " << std::strerror(errno) << "\n";
@@ -138,7 +138,7 @@ void Server::acceptNewConnection()
         return;
     }
     create_pfd(client_fd);
-    Client *client = new Client(client_fd);
+    Client* client = new Client(client_fd);
     _state.addClient(client_fd, client);
 }
 
@@ -228,14 +228,13 @@ void Server::handleClientData(int client_fd)
     {
         try
         {
-             Command cmd = Parser::parse(command_line);
-             _dispatcher.dispatch(client, cmd, _state);
+            Command cmd = Parser::parse(command_line);
+            _dispatcher.dispatch(client, cmd, _state);
         }
-        catch(const Parser::InvalidMessageException& e)
+        catch (const Parser::InvalidMessageException& e)
         {
             std::cerr << e.what() << '\n';
         }
-
     }
     if (client->getInBuff().size() > 512)
         client->clearInBuff(-1);
@@ -304,6 +303,6 @@ void Server::run()
 
 void handle_signal(int sig)
 {
-    (void) sig;
+    (void)sig;
     server_running = false;
 }

@@ -1,7 +1,7 @@
 #include "Commands.hpp"
 
 static bool checkErrors(Client* client, Channel* channel, Client* target,
-                          const std::string& channelName, const std::string& targetNick)
+                        const std::string& channelName, const std::string& targetNick)
 {
     if (!channel)
         return reply(client, 403, channelName + " :No such channel"), false;
@@ -13,7 +13,8 @@ static bool checkErrors(Client* client, Channel* channel, Client* target,
         return reply(client, 482, channelName + " :You're not channel operator"), false;
 
     if (!target || !channel->isMember(target))
-        return reply(client, 441, targetNick + " " + channelName + " :They aren't on that channel"), false;
+        return reply(client, 441, targetNick + " " + channelName + " :They aren't on that channel"),
+               false;
 
     return true;
 }
@@ -41,7 +42,8 @@ void cmdKick(Client* client, const Command& cmd, ServerState& state)
     if (cmd.params.size() > 2 && !cmd.params[2].empty())
         comment = cmd.params[2];
 
-    channel->broadcast(client->getPrefix() + " KICK " + channelName + " " + targetNick + " :" + comment + "\r\n");
+    channel->broadcast(client->getPrefix() + " KICK " + channelName + " " + targetNick + " :" +
+                       comment + "\r\n");
     channel->removeClient(target);
     target->removeChannel(channel);
     state.removeChannelIfEmpty(channelName);

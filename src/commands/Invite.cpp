@@ -1,7 +1,7 @@
 #include "Commands.hpp"
 
 static bool checkErrors(Client* client, Channel* channel, Client* target,
-                          const std::string& channelName, const std::string& targetNick)
+                        const std::string& channelName, const std::string& targetNick)
 {
     if (!target)
         return reply(client, 401, targetNick + " :No such nick"), false;
@@ -16,7 +16,8 @@ static bool checkErrors(Client* client, Channel* channel, Client* target,
         return reply(client, 482, channelName + " :You're not channel operator"), false;
 
     if (channel->isMember(target))
-        return reply(client, 443, targetNick + " " + channelName + " :is already on channel"), false;
+        return reply(client, 443, targetNick + " " + channelName + " :is already on channel"),
+               false;
 
     return true;
 }
@@ -42,5 +43,6 @@ void cmdInvite(Client* client, const Command& cmd, ServerState& state)
 
     channel->addInvite(target);
     reply(client, 341, targetNick + " " + channelName);
-    target->appendOutBuff(client->getPrefix() + " INVITE " + targetNick + " " + channelName + "\r\n");
+    target->appendOutBuff(client->getPrefix() + " INVITE " + targetNick + " " + channelName +
+                          "\r\n");
 }

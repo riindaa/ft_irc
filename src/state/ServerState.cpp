@@ -1,6 +1,6 @@
+#include <cctype>
 #include <iostream>
 #include <stdexcept>
-#include <cctype>
 
 #include "Reply.hpp"
 #include "ServerState.hpp"
@@ -28,8 +28,8 @@ void ServerState::removeClientFromAllChannels(Client* client)
 
     std::vector<std::string> namesToCheck;
 
-    for (std::map<std::string, Channel*>::iterator it = _channels.begin();
-         it != _channels.end(); ++it)
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end();
+         ++it)
     {
         Channel* channel = it->second;
         if (channel && channel->isMember(client))
@@ -40,8 +40,8 @@ void ServerState::removeClientFromAllChannels(Client* client)
         }
     }
 
-    for (std::vector<std::string>::iterator it = namesToCheck.begin();
-         it != namesToCheck.end(); ++it)
+    for (std::vector<std::string>::iterator it = namesToCheck.begin(); it != namesToCheck.end();
+         ++it)
     {
         removeChannelIfEmpty(*it);
     }
@@ -60,8 +60,7 @@ Client* ServerState::getClientByNick(const std::string& nick)
 {
     const std::string nickToLower = toLower(nick);
 
-    for (std::map<int, Client*>::iterator it = _clients.begin();
-         it != _clients.end(); ++it)
+    for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
         if (toLower(it->second->getNickname()) == nickToLower)
             return it->second;
@@ -70,8 +69,8 @@ Client* ServerState::getClientByNick(const std::string& nick)
 }
 Channel* ServerState::getChannel(const std::string& name)
 {
-    for (std::map<std::string, Channel*>::iterator it = _channels.begin();
-            it != _channels.end(); ++it)
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end();
+         ++it)
     {
         if (it->second->getName() == name)
             return it->second;
@@ -103,7 +102,8 @@ void ServerState::cleanUp()
     }
     _clients.clear();
 
-    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end();
+         ++it)
     {
         if (it->second)
             delete it->second;
@@ -143,10 +143,10 @@ bool ServerState::checkPassword(const std::string& input) const
 void ServerState::tryRegister(Client* client)
 {
     if (!client || client->isRegistered())
-          return;
+        return;
 
     if (!client->hasPass() || client->getNickname().empty() || client->getUsername().empty())
-          return;
+        return;
 
     client->setIsRegistered(true);
     reply(client, 1, ":Welcome to IRC " + client->getNickname());

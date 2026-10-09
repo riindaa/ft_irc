@@ -34,6 +34,7 @@ HDR = 	include/irc.hpp \
 		src/state/ServerState.hpp \
 		src/commands/Command.hpp \
 		src/commands/Commands.hpp \
+		src/bot/Bot.hpp \
 
 OBJ = $(SRC:.cpp=.o)
 
@@ -53,4 +54,10 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+format:
+	clang-format -i $(SRC) $(HDR)
+
+check-format:
+	clang-format --dry-run --Werror $(SRC) $(HDR)
+
+.PHONY: all clean fclean re format check-format

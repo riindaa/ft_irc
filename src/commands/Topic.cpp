@@ -28,7 +28,8 @@ void cmdTopic(Client* client, const Command& cmd, ServerState& state)
 
     if (channel->isTopicRestricted() && !channel->isOperator(client))
         return reply(client, 482, channel->getName() + " :You're not channel operator");
-        
+
     channel->setTopic(cmd.params[1]);
-    channel->broadcast(client->getPrefix() + " TOPIC " + channel->getName() + " :" + cmd.params[1] + "\r\n");
+    channel->broadcast(client->getPrefix() + " TOPIC " + channel->getName() + " :" + cmd.params[1] +
+                       "\r\n");
 }

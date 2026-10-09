@@ -42,7 +42,7 @@ bool Channel::isTopicRestricted() const
 
 bool Channel::isEmpty() const
 {
-   return _clients.empty();
+    return _clients.empty();
 }
 
 const std::map<Client*, bool>& Channel::getClients() const
@@ -137,20 +137,18 @@ void Channel::removeInvite(Client* client)
         _invitedClients.erase(client);
 }
 
-
 void Channel::broadcast(const std::string& message, Client* sender)
 {
     for (std::map<Client*, bool>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-        {
-            Client* temp = it->first;
+    {
+        Client* temp = it->first;
 
-            if (sender != NULL && temp == sender)
-                continue;
+        if (sender != NULL && temp == sender)
+            continue;
 
-            temp->appendOutBuff(message);
-        }
+        temp->appendOutBuff(message);
+    }
 }
-
 
 size_t Channel::getClientCount() const
 {
@@ -161,8 +159,7 @@ std::string Channel::getClientNames() const
 {
     std::string names;
 
-    for (std::map<Client*, bool>::const_iterator it = _clients.begin();
-         it != _clients.end(); ++it)
+    for (std::map<Client*, bool>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
         if (!names.empty())
             names += " ";

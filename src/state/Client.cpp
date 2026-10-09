@@ -133,7 +133,7 @@ void Client::closeClient()
     }
 }
 
-bool Client::extractNextCommand(std::string &command_line)
+bool Client::extractNextCommand(std::string& command_line)
 {
     size_t pos = _inBuff.find("\r\n");
     size_t delimiter_len = 2;

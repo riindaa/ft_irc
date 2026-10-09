@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "Command.hpp"
 #include "../state/Client.hpp"
-#include "../state/ServerState.hpp"
 #include "../state/Reply.hpp"
+#include "../state/ServerState.hpp"
+#include "Command.hpp"
 
 void cmdPass(Client* client, const Command& cmd, ServerState& state);
 void cmdNick(Client* client, const Command& cmd, ServerState& state);
