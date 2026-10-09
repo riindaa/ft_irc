@@ -35,7 +35,8 @@ static void sendMembersToNewClient(Channel* channel, Client* client)
     reply(client, 366, channel->getName() + " :End of /NAMES list");
 }
 
-static void joinChannel(Client* client, const std::string& name, ServerState& state)
+static void joinChannel(Client* client, const std::string& name, ServerState& state, 
+                            const std::string& key)
 {
     Channel* channel = state.getChannel(name);
     bool isNew = (channel == NULL);
@@ -45,6 +46,24 @@ static void joinChannel(Client* client, const std::string& name, ServerState& st
 
     if (channel->isMember(client))
         return;
+
+    if (channel->isInviteOnly() && !channel->isInvited(client))
+    {
+        reply(client, 473, name + " :Cannot join channel (+i)");
+        return;
+    }
+
+    if (!channel->getKey().empty() && (channel->getKey() != key))
+    {
+        reply(client, 475, name + " :Cannot join channel (+k)");
+        return;
+    }
+
+    if ((channel->getUserLimit() > 0) && (channel->getClients().size() >= channel->getUserLimit()))
+    {
+        reply(client, 471, name + " :Cannot join channel (+l)");
+        return;
+    }
 
     channel->addClient(client, isNew);
     client->addChannel(channel);
@@ -80,7 +99,7 @@ void cmdJoin(Client* client, const Command& cmd, ServerState& state)
             reply(client, 403, channels[i] + " :No such channel");
             continue;
         }
-
-        joinChannel(client, channels[i], state);
+        std::string key = i < keys.size() ? keys[i] : "";
+        joinChannel(client, channels[i], state, key);
     }
 }
