@@ -24,6 +24,24 @@ static bool isValidNickname(const std::string& nick)
     return true;
 }
 
+static void broadcastNickChange(Client* client, const std::string& message)
+{
+    std::set<Client*> recipients;
+    recipients.insert(client);
+
+    const std::set<Channel*>& channels = client->getChannels();
+    for (std::set<Channel*>::const_iterator ch = channels.begin(); ch != channels.end(); ++ch)
+    {
+        const std::map<Client*, bool>& members = (*ch)->getClients();
+        for (std::map<Client*, bool>::const_iterator it = members.begin(); it != members.end();
+             ++it)
+            recipients.insert(it->first);
+    }
+
+    for (std::set<Client*>::iterator it = recipients.begin(); it != recipients.end(); ++it)
+        (*it)->appendOutBuff(message);
+}
+
 void cmdNick(Client* client, const Command& cmd, ServerState& state)
 {
     if (!client)
@@ -46,7 +64,7 @@ void cmdNick(Client* client, const Command& cmd, ServerState& state)
         return;
 
     if (client->isRegistered())
-        client->appendOutBuff(":" + client->getNickname() + " NICK :" + nickname + "\r\n");
+        broadcastNickChange(client, client->getPrefix() + " NICK :" + nickname + "\r\n");
 
     client->setNickname(nickname);
     state.tryRegister(client);
