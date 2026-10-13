@@ -21,8 +21,7 @@ static void sendMembersToNewClient(Channel* channel, Client* client)
     std::string names;
     const std::map<Client*, bool>& members = channel->getClients();
 
-    for (std::map<Client*, bool>::const_iterator it = members.begin();
-            it != members.end(); ++it)
+    for (std::map<Client*, bool>::const_iterator it = members.begin(); it != members.end(); ++it)
     {
         if (!names.empty())
             names += " ";
@@ -35,8 +34,8 @@ static void sendMembersToNewClient(Channel* channel, Client* client)
     reply(client, 366, channel->getName() + " :End of /NAMES list");
 }
 
-static void joinChannel(Client* client, const std::string& name, ServerState& state, 
-                            const std::string& key)
+static void joinChannel(Client* client, const std::string& name, ServerState& state,
+                        const std::string& key)
 {
     Channel* channel = state.getChannel(name);
     bool isNew = (channel == NULL);

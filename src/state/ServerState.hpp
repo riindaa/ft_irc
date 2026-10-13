@@ -1,22 +1,23 @@
 #ifndef SERVERSTATE_HPP
 #define SERVERSTATE_HPP
 
-#include "Client.hpp"
-#include "Channel.hpp"
-#include <unistd.h>
-#include <string>
-#include <map>
-#include <vector>
 #include "../bot/Bot.hpp"
+#include "Channel.hpp"
+#include "Client.hpp"
+#include <map>
+#include <string>
+#include <unistd.h>
+#include <vector>
 
-class ServerState {
-private:
+class ServerState
+{
+  private:
     std::string _password;
     std::map<int, Client*> _clients;
     std::map<std::string, Channel*> _channels;
     Bot _bot;
 
-public:
+  public:
     ServerState(const std::string& password);
     ~ServerState();
 

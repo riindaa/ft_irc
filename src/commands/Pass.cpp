@@ -4,7 +4,7 @@ void cmdPass(Client* client, const Command& cmd, ServerState& state)
 {
     if (!client)
         return;
-    
+
     if (cmd.params.empty())
         return reply(client, 461, cmd.name + " :Not enough parameters");
 
